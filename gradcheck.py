@@ -4,16 +4,8 @@ import numpy as np
 import random
 
 
-# First implement a gradient checker by filling in the following functions
+
 def gradcheck_naive(f, x):
-    """ Gradient check for a function f.
-
-    Arguments:
-    f -- a function that takes a single argument and outputs the
-         cost and its gradients
-    x -- the point (numpy array) to check the gradient at
-    """
-
     rndstate = random.getstate()
     random.setstate(rndstate)
     fx, grad = f(x) # Evaluate function value at original point
@@ -24,19 +16,12 @@ def gradcheck_naive(f, x):
     while not it.finished:
         ix = it.multi_index
 
-        # Try modifying x[ix] with h defined above to compute
-        # numerical gradients. Make sure you call random.setstate(rndstate)
-        # before calling f(x) each time. This will make it possible
-        # to test cost functions with built in randomness later.
-
-        ### YOUR CODE HERE:
         right_x = x.astype(float)
         left_x = x.astype(float)
         right_x[ix] += h
         left_x[ix] -= h
         random.setstate(rndstate)
         numgrad = (f(right_x)[0] - f(left_x)[0]) / (2 * h)
-        ### END YOUR CODE
 
         # Compare gradients
         reldiff = abs(numgrad - grad[ix]) / max(1, abs(numgrad), abs(grad[ix]))
@@ -65,20 +50,5 @@ def sanity_check():
     print ""
 
 
-def your_sanity_checks():
-    """
-    Use this space add any additional sanity checks by running:
-        python gradcheck.py
-    This function will not be called by the autograder, nor will
-    your additional tests be graded.
-    """
-    print "Running your sanity checks..."
-    ### YOUR CODE HERE
-    quad = lambda x: (np.sum(x ** 3), 3 * x ** 2)
-    gradcheck_naive(quad, np.array([[1, 2, 3], [4, 5, 6]]))
-    ### END YOUR CODE
-
-
 if __name__ == "__main__":
     sanity_check()
-    your_sanity_checks()
